@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+/* ============================================================
+   RAHIM'S COLLECTION — GLOBAL DESIGN TOKENS (Tailwind v4)
+   
+   In Tailwind v4, tokens are CSS-first:
+     • --color-*   → bg-*, text-*, border-*, etc.
+     • --font-*    → font-* utilities
+     • --radius-*  → rounded-* utilities
+   ============================================================ */
+
+@theme {
+  /* ── Brand Color Palette ──────────────────────────────────
+     Maps to utility classes:
+       bg-charcoal, text-charcoal, border-charcoal
+       bg-charcoal-light, bg-gold, text-gold
+       bg-gold-light, text-gold-light
+       bg-cream, bg-ivory
+       text-text-muted
+  ───────────────────────────────────────────────────────── */
+  --color-charcoal:       #1A1A1A;
+  --color-charcoal-light: #2A2A2A;
+  --color-gold:           #9C7A3C;
+  --color-gold-light:     #C9A961;
+  --color-cream:          #F5F0E8;
+  --color-ivory:          #FFFFFF;
+  --color-text-muted:     #8A8A8A;
+
+  /* ── Typography ───────────────────────────────────────────
+     CSS variables injected by next/font/google in layout.tsx.
+     --font-inter    → font-sans utility
+     --font-playfair → font-serif utility
+  ───────────────────────────────────────────────────────── */
+  --font-sans:  var(--font-inter);
+  --font-serif: var(--font-playfair);
+
+  /* ── Border Radius ────────────────────────────────────────
+     --radius-luxury → rounded-luxury utility (0.75rem)
+     Default rounded is Tailwind's built-in 0.25rem; we keep it.
+  ───────────────────────────────────────────────────────── */
+  --radius-luxury: 0.75rem;
+}
+
+/* ── Base Styles ──────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-charcoal);
+  color: var(--color-cream);
+  font-family: var(--font-sans, "Inter", system-ui, sans-serif);
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
