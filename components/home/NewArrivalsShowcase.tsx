@@ -177,7 +177,7 @@ function ProductShowcaseItem({
       ref={sectionRef}
       id={`showcase-${index}`}
       aria-label={`Featured product: ${product.name}`}
-      className="relative min-h-screen bg-charcoal"
+      className="relative min-h-screen bg-charcoal pt-16 pb-20 md:py-0"
     >
       {/* Thin gold-tinted divider between products (not before first) */}
       {index > 0 && (
