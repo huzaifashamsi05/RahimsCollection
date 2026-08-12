@@ -9,6 +9,7 @@ import {
   useTransform,
   useInView,
   useReducedMotion,
+  AnimatePresence,
 } from "framer-motion";
 import { Product } from "@/types/product";
 import { formatPrice } from "@/lib/constants";
@@ -154,8 +155,22 @@ function ProductShowcaseItem({
     reducedMotion ? [0, 0] : [-45, 45]   // ±45 px subtle depth
   );
 
-  /* ── Layout ──────────────────────────────────────────────── */
+  /* ── Auto-cycle images logic ─────────────────────────────── */
   const images = product.colors.find(c => c.isDefault)?.images || [];
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    if (!isInView || reducedMotion || images.length <= 1) {
+      if (!isInView) setCurrentImageIndex(0); // Reset when scrolled out
+      return;
+    }
+
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 4500);
+
+    return () => clearInterval(timer);
+  }, [isInView, reducedMotion, images.length]);
   const isImageLeft = index % 2 === 0; // alternate left / right
   const waUrl       = getWhatsAppLink(`Hi, I'm interested in ${product.name} — Rs. ${product.price.toLocaleString("en-IN")}. Is this available?`);
   const shownColors = product.colors.slice(0, 4);
@@ -221,39 +236,41 @@ function ProductShowcaseItem({
             style={{ y: parallaxY }}
             className="absolute inset-x-0 -top-12 -bottom-12"
           >
-            {/* Image 1 — always visible; subtle zoom on desktop hover */}
-            <Image
-              src={images[0]}
-              alt={product.name}
-              fill
-              className={[
-                "object-cover",
-                "transition-transform duration-[400ms] ease-out",
-                "md:group-hover:scale-[1.03]",
-              ].join(" ")}
-              /* First two products eager (LCP candidates) */
-              priority={index === 0}
-              loading={index < 2 ? "eager" : "lazy"}
-              sizes="(max-width: 768px) 100vw, 55vw"
-              draggable={false}
-            />
+            <AnimatePresence initial={false}>
+              <motion.div
+                key={currentImageIndex}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.6, ease: "easeInOut" }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src={images[currentImageIndex]}
+                  alt={`${product.name} - View ${currentImageIndex + 1}`}
+                  fill
+                  className="object-cover"
+                  priority={index === 0 && currentImageIndex === 0}
+                  loading={index < 2 && currentImageIndex === 0 ? "eager" : "lazy"}
+                  sizes="(max-width: 768px) 100vw, 55vw"
+                  draggable={false}
+                />
+              </motion.div>
+            </AnimatePresence>
 
-            {/* Image 2 — crossfades in on desktop hover (same technique as ProductCard) */}
-            {images[1] && (
-              <Image
-                src={images[1]}
-                alt={`${product.name} — alternate view`}
-                fill
-                className={[
-                  "object-cover",
-                  "opacity-0 transition-opacity duration-[400ms] ease-out",
-                  "md:group-hover:opacity-100",
-                ].join(" ")}
-                loading="lazy"
-                sizes="(max-width: 768px) 100vw, 55vw"
-                draggable={false}
-                aria-hidden="true"
-              />
+            {/* Subtle dot indicators for auto-cycling */}
+            {images.length > 1 && (
+              <div className="absolute bottom-16 inset-x-0 flex justify-center gap-2 z-20 pointer-events-none">
+                {images.map((_, i) => (
+                  <div
+                    key={i}
+                    className={[
+                      "w-1.5 h-1.5 rounded-full transition-all duration-300",
+                      currentImageIndex === i ? "bg-gold scale-125" : "bg-cream/40"
+                    ].join(" ")}
+                  />
+                ))}
+              </div>
             )}
 
             {/* Gradient bridge toward text column */}
