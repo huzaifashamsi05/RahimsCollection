@@ -559,7 +559,7 @@ export default function ShopContent({ initialProducts = [] }: { initialProducts?
       {/* ─────────────────────────────────────────────────────
           MAIN PAGE  (full-width — no sidebar)
           ───────────────────────────────────────────────────── */}
-      <div className="bg-[#FAF7F2] min-h-screen pt-24 md:pt-28 pb-24 px-4 sm:px-6 lg:px-8">
+      <div className="bg-[#FAF7F2] min-h-screen pt-24 md:pt-28 pb-24 px-4 sm:px-6 lg:px-8 snap-start">
         <div className="max-w-7xl mx-auto">
 
           {/* ── Page header ────────────────────────────────── */}
