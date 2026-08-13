@@ -289,20 +289,20 @@ export default function ProductCard({
       </div>
 
       {/* ── Action Buttons — relative z-20 to sit above the Link ────── */}
-      <div className="px-3 pb-3 md:px-4 md:pb-4 flex gap-2 relative z-20 w-full mt-auto">
+      <div className="px-3 pb-3 md:px-4 md:pb-4 flex flex-row md:flex-col gap-2 relative z-20 w-full mt-auto">
         <Button
           variant="secondary"
           size="sm"
-          className="shrink-0 w-[40%] md:w-[42%] flex items-center justify-center gap-1 px-1"
+          className="shrink-0 w-[40%] md:w-full flex items-center justify-center gap-1 px-1"
           onClick={() => router.push(`/shop/${slug}`)}
         >
-          <span className="text-[10px] sm:text-xs">View Details</span>
+          <span className="text-[10px] sm:text-xs md:text-sm">View Details</span>
         </Button>
 
         {isSoldOut ? (
           <div
             className={[
-              "flex-1 inline-flex items-center justify-center gap-1.5",
+              "flex-1 md:w-full inline-flex items-center justify-center gap-1.5",
               "rounded-luxury font-sans font-medium text-[10px] sm:text-sm tracking-wide",
               "px-2 py-2 min-h-[36px]",
               "bg-transparent text-text-muted border border-charcoal-light",
@@ -321,7 +321,7 @@ export default function ProductCard({
             rel="noopener noreferrer"
             aria-label={`Order "${name}" via WhatsApp`}
             className={[
-              "flex-1 inline-flex items-center justify-center gap-1.5",
+              "flex-1 md:w-full inline-flex items-center justify-center gap-1.5",
               "rounded-luxury font-sans font-medium text-[10px] sm:text-sm tracking-wide",
               "px-2 py-2 min-h-[36px]",
               "bg-transparent text-gold border border-gold",
