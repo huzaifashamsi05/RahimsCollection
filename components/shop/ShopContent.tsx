@@ -509,7 +509,7 @@ export default function ShopContent({ initialProducts = [] }: { initialProducts?
       <style>{`
         @media (max-width: 767px) {
           html, body {
-            scroll-snap-type: y mandatory;
+            scroll-snap-type: y proximity;
           }
         }
       `}</style>
