@@ -1,11 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Product } from "@/types/product";
 import { formatPrice } from "@/lib/constants";
 import { getWhatsAppLink } from "@/lib/whatsapp";
+import { useInView, useReducedMotion, AnimatePresence, motion } from "framer-motion";
 
 /* ============================================================
    ProductCard — Rahim's Collection
@@ -83,22 +84,43 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
   const images = defaultColor.images || [];
   const hasHover     = images.length > 1;
   const [activeIndex, setActiveIndex] = useState(0);
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const el = e.currentTarget;
-    const newIndex = Math.round(el.scrollLeft / el.clientWidth);
-    if (newIndex !== activeIndex && newIndex >= 0 && newIndex < images.length) {
-      setActiveIndex(newIndex);
+  const shownColors  = colors.slice(0, MAX_SWATCHES);
+  const extraColors  = Math.max(0, colors.length - MAX_SWATCHES);
+
+  /* ── Auto-cycle logic (Mobile only) ──────────────────────────── */
+  const cardRef = useRef<HTMLElement>(null);
+  const reducedMotion = useReducedMotion() ?? false;
+  const isInView = useInView(cardRef, { amount: 0.5, margin: "0px" });
+
+  useEffect(() => {
+    if (!isInView || reducedMotion || images.length <= 1) {
+      if (!isInView) setActiveIndex(0);
+      return;
     }
-  };
+
+    // Only run on mobile viewport (simplified check: if window width < 768px)
+    if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+       return;
+    }
+
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % images.length);
+    }, 4500);
+
+    return () => clearInterval(timer);
+  }, [isInView, reducedMotion, images.length]);
 
   const shownColors  = colors.slice(0, MAX_SWATCHES);
   const extraColors  = Math.max(0, colors.length - MAX_SWATCHES);
 
   return (
     <article
+      ref={cardRef}
       className={[
         "group flex flex-col",
         "bg-charcoal-light rounded-luxury overflow-hidden",
+        /* Mobile height (large peek-scroll) vs Desktop auto-height */
+        "min-h-[88vh] md:min-h-0",
         /* Card lift + subtle gold aura on hover */
         "transition-[box-shadow,transform] duration-[250ms] ease-out",
         "hover:-translate-y-0.5",
@@ -107,7 +129,7 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
     >
       {/* ── Image area ──────────────────────────────────────── */}
       <div
-        className="relative aspect-[3/4] overflow-hidden"
+        className="relative flex-1 md:flex-none md:aspect-[3/4] overflow-hidden"
         /* Sold-out: dim to ~60% + partial greyscale on the whole image block */
         style={isSoldOut ? { opacity: 0.6, filter: "grayscale(0.45)" } : undefined}
       >
@@ -140,31 +162,40 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
           )}
         </div>
 
-        {/* Mobile: Swipeable images */}
-        <div className="md:hidden flex w-full h-full overflow-x-auto snap-x snap-mandatory scrollbar-hide" onScroll={handleScroll}>
-          {hasHover ? images.map((src, i) => (
-            <div key={i} className="relative w-full h-full flex-none snap-center">
+        {/* Mobile: Auto-cycling images */}
+        <div className="md:hidden block w-full h-full relative">
+          <AnimatePresence initial={false}>
+            <motion.div
+              key={activeIndex}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+              className="absolute inset-0"
+            >
               <Image
-                src={src}
-                alt={`${name} image ${i+1}`}
+                src={images[activeIndex]}
+                alt={`${name} image ${activeIndex + 1}`}
                 fill
                 sizes="100vw"
                 className="object-cover"
-                priority={priority && i === 0}
+                priority={priority && activeIndex === 0}
               />
-            </div>
-          )) : (
-            <div className="relative w-full h-full flex-none">
-              <Image src={images[0]} alt={name} fill sizes="100vw" className="object-cover" priority={priority} />
-            </div>
-          )}
+            </motion.div>
+          </AnimatePresence>
         </div>
         
         {/* Mobile Dots */}
         {hasHover && (
-          <div className="md:hidden absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 pointer-events-none z-10">
+          <div className="md:hidden absolute bottom-3 left-0 right-0 flex justify-center gap-2 pointer-events-none z-10">
             {images.map((_, i) => (
-              <div key={i} className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === activeIndex ? 'bg-gold w-3' : 'bg-cream/50'}`} />
+               <div
+                 key={i}
+                 className={[
+                   "w-1.5 h-1.5 rounded-full transition-all duration-300",
+                   activeIndex === i ? "bg-gold scale-125" : "bg-cream/40"
+                 ].join(" ")}
+               />
             ))}
           </div>
         )}
