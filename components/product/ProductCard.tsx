@@ -143,10 +143,10 @@ export default function ProductCard({
       />
 
       {/* ── Visual Container (Scales on tap) ── */}
-      <div className="flex flex-col flex-1 transition-transform duration-100 peer-active:scale-[0.98]">
+      <div className="flex flex-col flex-auto min-h-0 transition-transform duration-100 peer-active:scale-[0.98]">
         {/* ── Image area ──────────────────────────────────────── */}
         <div
-          className="relative flex-1 md:flex-none md:aspect-[3/4] overflow-hidden"
+          className="relative flex-auto min-h-0 md:flex-none md:aspect-[3/4] overflow-hidden"
           /* Sold-out: dim to ~60% + partial greyscale on the whole image block */
           style={isSoldOut ? { opacity: 0.6, filter: "grayscale(0.45)" } : undefined}
         >
@@ -236,7 +236,7 @@ export default function ProductCard({
       </div>
 
       {/* ── Card body text ───────────────────────────────────────── */}
-      <div className="flex flex-col gap-2 px-3 pt-3 pb-2 md:gap-3 md:px-4 md:pt-4 md:pb-2 flex-1 relative z-0">
+      <div className="flex flex-col gap-2 px-3 pt-3 pb-2 md:gap-3 md:px-4 md:pt-4 md:pb-2 flex-none relative z-0">
 
         {/* Colour swatches row + piece count */}
         <div className="flex items-center justify-between gap-2">
@@ -289,7 +289,7 @@ export default function ProductCard({
       </div>
 
       {/* ── Action Buttons — relative z-20 to sit above the Link ────── */}
-      <div className="px-3 pb-3 md:px-4 md:pb-4 flex flex-row md:flex-col gap-2 relative z-20 w-full mt-auto">
+      <div className="px-3 pb-3 md:px-4 md:pb-4 flex flex-row md:flex-col gap-2 relative z-20 w-full flex-none">
         <Button
           variant="secondary"
           size="sm"
