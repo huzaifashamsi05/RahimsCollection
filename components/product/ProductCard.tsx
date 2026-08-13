@@ -115,7 +115,7 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
     <article
       ref={cardRef}
       className={[
-        "group flex flex-col snap-center",
+        "group flex flex-col snap-center relative",
         "bg-charcoal-light rounded-luxury overflow-hidden",
         /* Mobile height: ~75vh, Desktop: auto */
         "h-[75vh] md:h-auto",
@@ -128,12 +128,21 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
         "hover:shadow-[0_16px_48px_rgba(0,0,0,0.65),0_0_0_1px_rgba(156,122,60,0.12)]",
       ].join(" ")}
     >
-      {/* ── Image area ──────────────────────────────────────── */}
-      <div
-        className="relative flex-1 md:flex-none md:aspect-[3/4] overflow-hidden"
-        /* Sold-out: dim to ~60% + partial greyscale on the whole image block */
-        style={isSoldOut ? { opacity: 0.6, filter: "grayscale(0.45)" } : undefined}
-      >
+      {/* ── Full Card Click Target ── */}
+      <Link 
+        href={`/shop/${slug}`} 
+        className="absolute inset-0 z-10 peer focus:outline-none" 
+        aria-label={`View details for ${name}`} 
+      />
+
+      {/* ── Visual Container (Scales on tap) ── */}
+      <div className="flex flex-col flex-1 transition-transform duration-100 peer-active:scale-[0.98]">
+        {/* ── Image area ──────────────────────────────────────── */}
+        <div
+          className="relative flex-1 md:flex-none md:aspect-[3/4] overflow-hidden"
+          /* Sold-out: dim to ~60% + partial greyscale on the whole image block */
+          style={isSoldOut ? { opacity: 0.6, filter: "grayscale(0.45)" } : undefined}
+        >
         {/* Desktop: Image 1 + Zoom/Fade */}
         <div className="hidden md:block w-full h-full relative">
           <Image
@@ -219,8 +228,8 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
         </div>
       </div>
 
-      {/* ── Card body ───────────────────────────────────────── */}
-      <div className="flex flex-col gap-3 p-4 flex-1">
+      {/* ── Card body text ───────────────────────────────────────── */}
+      <div className="flex flex-col gap-3 px-4 pt-4 pb-2 flex-1 relative z-0">
 
         {/* Colour swatches row + piece count */}
         <div className="flex items-center justify-between gap-2">
@@ -249,17 +258,10 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
           </span>
         </div>
 
-        {/* Product name — links to detail page; truncates at 2 lines */}
-        <Link
-          href={`/shop/${slug}`}
-          className={[
-            "font-sans text-sm font-medium text-cream leading-snug line-clamp-2",
-            "transition-colors duration-200 hover:text-ivory",
-            "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gold rounded-sm",
-          ].join(" ")}
-        >
+        {/* Product name */}
+        <p className="font-sans text-sm font-medium text-cream leading-snug line-clamp-2 transition-colors duration-200 group-hover:text-ivory">
           {name}
-        </Link>
+        </p>
 
         {/* Price */}
         {!hidePrice && (
@@ -275,12 +277,24 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
           )
         )}
 
-        {/* ── WhatsApp CTA — always visible, full width ──────
-            Disabled state when sold out: muted styling, no link. */}
+        {/* View Details Affordance */}
+        <div className="mt-auto pt-1 flex items-center gap-1 text-text-muted transition-colors duration-200 group-hover:text-gold group-active:text-gold">
+          <span className="font-sans text-[11px] uppercase tracking-widest">View Full Details</span>
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+
+      </div>
+      {/* ── End Visual Container ── */}
+      </div>
+
+      {/* ── WhatsApp CTA — relative z-20 to sit above the Link ────── */}
+      <div className="px-4 pb-4 relative z-20">
         {isSoldOut ? (
           <div
             className={[
-              "mt-auto inline-flex items-center justify-center gap-2 w-full",
+              "w-full inline-flex items-center justify-center gap-2",
               "rounded-luxury font-sans font-medium text-sm tracking-wide",
               "px-4 py-2 min-h-[36px]",
               "bg-transparent text-text-muted border border-charcoal-light",
@@ -299,7 +313,7 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
             rel="noopener noreferrer"
             aria-label={`Order "${name}" via WhatsApp`}
             className={[
-              "mt-auto inline-flex items-center justify-center gap-2 w-full",
+              "w-full inline-flex items-center justify-center gap-2",
               "rounded-luxury font-sans font-medium text-sm tracking-wide",
               "px-4 py-2 min-h-[36px]",
               "bg-transparent text-gold border border-gold",
@@ -313,8 +327,8 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
             <span>Order via WhatsApp</span>
           </a>
         )}
-
       </div>
+
     </article>
   );
 }
