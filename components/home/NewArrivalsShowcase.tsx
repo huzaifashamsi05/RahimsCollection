@@ -88,7 +88,7 @@ function ProgressIndicator({
       className={[
         /* Desktop only */
         "fixed right-5 top-1/2 -translate-y-1/2 z-40",
-        "hidden md:flex flex-col gap-3.5",
+        "hidden md:flex flex-col items-center gap-3.5",
         /* Fade in/out with showcase visibility */
         "transition-opacity duration-500",
         visible ? "opacity-100" : "opacity-0 pointer-events-none",
@@ -111,7 +111,36 @@ function ProgressIndicator({
           ].join(" ")}
         />
       ))}
+      <Link 
+        href="/shop"
+        className="absolute top-full mt-6 right-0 whitespace-nowrap text-[11px] font-sans uppercase tracking-widest text-cream/40 hover:text-gold transition-colors duration-300"
+      >
+        Skip to Shop &rarr;
+      </Link>
     </nav>
+  );
+}
+
+/* ============================================================
+   MobileSkipHint
+   Floating top-right pill (mobile only) — hidden while
+   showcase section is not in the viewport.
+   ============================================================ */
+function MobileSkipHint({ visible }: { visible: boolean }) {
+  return (
+    <Link
+      href="/shop"
+      className={[
+        "fixed top-[88px] right-4 z-40 md:hidden",
+        "bg-charcoal/80 backdrop-blur-md border border-cream/10",
+        "px-3 py-1.5 rounded-full shadow-lg",
+        "font-sans text-[10px] uppercase tracking-widest text-cream/70",
+        "transition-all duration-500",
+        visible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"
+      ].join(" ")}
+    >
+      Skip to Shop &rarr;
+    </Link>
   );
 }
 
@@ -466,6 +495,9 @@ export default function NewArrivalsShowcase({
         sectionIds={sectionIds}
         visible={showcaseVisible}
       />
+
+      {/* Floating skip pill — mobile only, fades with showcase */}
+      <MobileSkipHint visible={showcaseVisible} />
 
       {/* ── Product sub-sections ──────────────────────────── */}
       {products.map((product, i) => (
