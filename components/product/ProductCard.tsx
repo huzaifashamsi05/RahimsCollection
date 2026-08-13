@@ -115,10 +115,13 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
     <article
       ref={cardRef}
       className={[
-        "group flex flex-col",
+        "group flex flex-col snap-center",
         "bg-charcoal-light rounded-luxury overflow-hidden",
-        /* Mobile height (large peek-scroll) vs Desktop auto-height */
-        "min-h-[88vh] md:min-h-0",
+        /* Mobile height: ~75vh, Desktop: auto */
+        "h-[75vh] md:h-auto",
+        /* Dim/scale inactive cards on mobile (desktop is always full opacity) */
+        "transition-all duration-500 ease-out",
+        !isInView ? "max-md:opacity-65 max-md:scale-95" : "max-md:opacity-100 max-md:scale-100",
         /* Card lift + subtle gold aura on hover */
         "transition-[box-shadow,transform] duration-[250ms] ease-out",
         "hover:-translate-y-0.5",
@@ -161,7 +164,7 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
         </div>
 
         {/* Mobile: Auto-cycling images */}
-        <div className="md:hidden block w-full h-full relative">
+        <div className="md:hidden absolute inset-0 w-full h-full">
           <AnimatePresence initial={false}>
             <motion.div
               key={activeIndex}

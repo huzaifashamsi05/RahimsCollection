@@ -506,6 +506,13 @@ export default function ShopContent({ initialProducts = [] }: { initialProducts?
       {/* ─────────────────────────────────────────────────────
           MOBILE FILTER BOTTOM-SHEET  (unchanged from Step 11)
           ───────────────────────────────────────────────────── */}
+      <style>{`
+        @media (max-width: 767px) {
+          html, body {
+            scroll-snap-type: y mandatory;
+          }
+        }
+      `}</style>
       <AnimatePresence>
         {isMobileOpen && (
           <>
