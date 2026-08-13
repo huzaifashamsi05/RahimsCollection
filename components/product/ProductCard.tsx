@@ -3,10 +3,12 @@
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Product } from "@/types/product";
 import { formatPrice } from "@/lib/constants";
 import { getWhatsAppLink } from "@/lib/whatsapp";
 import { useInView, useReducedMotion, AnimatePresence, motion } from "framer-motion";
+import Button from "@/components/ui/Button";
 
 /* ============================================================
    ProductCard — Rahim's Collection
@@ -65,7 +67,12 @@ interface ProductCardProps {
 }
 
 /* ── Component ───────────────────────────────────────────────── */
-export default function ProductCard({ product, priority = false, hidePrice = false }: ProductCardProps) {
+export default function ProductCard({
+  product,
+  priority = false,
+  hidePrice = false,
+}: ProductCardProps) {
+  const router = useRouter();
   const {
     name,
     price,
@@ -229,7 +236,7 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
       </div>
 
       {/* ── Card body text ───────────────────────────────────────── */}
-      <div className="flex flex-col gap-3 px-4 pt-4 pb-2 flex-1 relative z-0">
+      <div className="flex flex-col gap-2 px-3 pt-3 pb-2 md:gap-3 md:px-4 md:pt-4 md:pb-2 flex-1 relative z-0">
 
         {/* Colour swatches row + piece count */}
         <div className="flex items-center justify-between gap-2">
@@ -277,26 +284,27 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
           )
         )}
 
-        {/* View Details Affordance */}
-        <div className="mt-auto pt-1 flex items-center gap-1 text-text-muted transition-colors duration-200 group-hover:text-gold group-active:text-gold">
-          <span className="font-sans text-[11px] uppercase tracking-widest">View Full Details</span>
-          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="1.5">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
-
       </div>
       {/* ── End Visual Container ── */}
       </div>
 
-      {/* ── WhatsApp CTA — relative z-20 to sit above the Link ────── */}
-      <div className="px-4 pb-4 relative z-20">
+      {/* ── Action Buttons — relative z-20 to sit above the Link ────── */}
+      <div className="px-3 pb-3 md:px-4 md:pb-4 flex gap-2 relative z-20 w-full mt-auto">
+        <Button
+          variant="secondary"
+          size="sm"
+          className="shrink-0 w-[40%] md:w-[42%] flex items-center justify-center gap-1 px-1"
+          onClick={() => router.push(`/shop/${slug}`)}
+        >
+          <span className="text-[10px] sm:text-xs">View Details</span>
+        </Button>
+
         {isSoldOut ? (
           <div
             className={[
-              "w-full inline-flex items-center justify-center gap-2",
-              "rounded-luxury font-sans font-medium text-sm tracking-wide",
-              "px-4 py-2 min-h-[36px]",
+              "flex-1 inline-flex items-center justify-center gap-1.5",
+              "rounded-luxury font-sans font-medium text-[10px] sm:text-sm tracking-wide",
+              "px-2 py-2 min-h-[36px]",
               "bg-transparent text-text-muted border border-charcoal-light",
               "cursor-not-allowed select-none opacity-60",
             ].join(" ")}
@@ -304,7 +312,7 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
             aria-disabled="true"
             aria-label="Product is sold out"
           >
-            <span>Currently Unavailable</span>
+            <span>Unavailable</span>
           </div>
         ) : (
           <a
@@ -313,9 +321,9 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
             rel="noopener noreferrer"
             aria-label={`Order "${name}" via WhatsApp`}
             className={[
-              "w-full inline-flex items-center justify-center gap-2",
-              "rounded-luxury font-sans font-medium text-sm tracking-wide",
-              "px-4 py-2 min-h-[36px]",
+              "flex-1 inline-flex items-center justify-center gap-1.5",
+              "rounded-luxury font-sans font-medium text-[10px] sm:text-sm tracking-wide",
+              "px-2 py-2 min-h-[36px]",
               "bg-transparent text-gold border border-gold",
               "transition-all duration-200 ease-out",
               "hover:border-gold-light hover:text-gold-light hover:bg-gold/5 hover:-translate-y-px",
@@ -323,7 +331,7 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
               "focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal-light",
             ].join(" ")}
           >
-            <WhatsAppIcon className="w-4 h-4 shrink-0" />
+            <WhatsAppIcon className="w-3.5 h-3.5 shrink-0" />
             <span>Order via WhatsApp</span>
           </a>
         )}
