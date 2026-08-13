@@ -1,5 +1,6 @@
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import FloatingWhatsApp from "@/components/layout/FloatingWhatsApp";
 import { getSettings } from "@/lib/queries/settings";
 
 export default async function StorefrontLayout({
@@ -13,6 +14,7 @@ export default async function StorefrontLayout({
       <Navbar />
       {children}
       <Footer settings={settings} />
+      <FloatingWhatsApp />
     </>
   );
 }

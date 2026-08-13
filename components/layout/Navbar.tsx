@@ -234,10 +234,6 @@ export default function Navbar() {
                 <NavLink key={link.href} href={link.href} label={link.label} />
               ))}
             </nav>
-
-            {/* ── WhatsApp icon ─────── */}
-            <WhatsAppButton className="-mr-2" />
-
           </div>
         </div>
       </header>
@@ -285,8 +281,6 @@ export default function Navbar() {
               >
                 Rahim&apos;s Collection
               </Link>
-
-              <WhatsAppButton className="-mr-2" />
             </motion.div>
 
             {/* ── Staggered nav links ─── */}
