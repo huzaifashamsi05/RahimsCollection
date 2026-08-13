@@ -110,8 +110,6 @@ export default function ProductCard({ product, priority = false, hidePrice = fal
     return () => clearInterval(timer);
   }, [isInView, reducedMotion, images.length]);
 
-  const shownColors  = colors.slice(0, MAX_SWATCHES);
-  const extraColors  = Math.max(0, colors.length - MAX_SWATCHES);
 
   return (
     <article
