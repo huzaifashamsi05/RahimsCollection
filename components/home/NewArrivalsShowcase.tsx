@@ -14,6 +14,8 @@ import {
 import { Product } from "@/types/product";
 import { formatPrice } from "@/lib/constants";
 import { getWhatsAppLink } from "@/lib/whatsapp";
+import { useRouter } from "next/navigation";
+import Button from "@/components/ui/Button";
 
 /* ============================================================
    NewArrivalsShowcase — Rahim's Collection
@@ -160,6 +162,7 @@ function ProductShowcaseItem({
 }) {
   const sectionRef  = useRef<HTMLElement>(null);
   const reducedMotion = useReducedMotion() ?? false;
+  const router = useRouter();
 
   /* ── Section visibility (drives progress dot + image opacity) ── */
   const isInView = useInView(sectionRef, {
@@ -401,12 +404,20 @@ function ProductShowcaseItem({
             </motion.p>
           )}
 
-          {/* WhatsApp CTA — disabled state for sold-out (shouldn't appear
-              in showcase, but safe-guarded) */}
-          <motion.div {...fadeUp(0.37)}>
+          {/* Action Buttons */}
+          <motion.div {...fadeUp(0.37)} className="flex flex-col gap-3 w-full sm:max-w-[320px]">
+            <Button
+              variant="secondary"
+              size="lg"
+              onClick={() => router.push(`/shop/${product.slug}`)}
+              className="w-full font-semibold text-[15px]"
+            >
+              View Details
+            </Button>
+
             {product.isSoldOut ? (
               <div
-                className="inline-flex items-center gap-3 font-sans font-medium text-base tracking-wide text-text-muted border border-charcoal-light rounded-luxury px-8 py-3.5 min-h-[48px] opacity-50 cursor-not-allowed select-none"
+                className="w-full inline-flex items-center justify-center gap-3 font-sans font-medium text-base tracking-wide text-text-muted border border-charcoal-light rounded-luxury px-8 py-3.5 min-h-[48px] opacity-50 cursor-not-allowed select-none"
                 role="button"
                 aria-disabled="true"
               >
@@ -420,7 +431,7 @@ function ProductShowcaseItem({
                 onClick={(e) => e.stopPropagation()}
                 aria-label={`Order "${product.name}" via WhatsApp`}
                 className={[
-                  "inline-flex items-center gap-3",
+                  "w-full inline-flex items-center justify-center gap-3",
                   "font-sans font-semibold text-[15px] tracking-wide",
                   "bg-gold text-charcoal rounded-luxury",
                   "px-8 py-3.5 min-h-[48px]",
