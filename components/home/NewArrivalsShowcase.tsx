@@ -201,7 +201,8 @@ function ProductShowcaseItem({
     return () => clearInterval(timer);
   }, [isInView, reducedMotion, images.length]);
   const isImageLeft = index % 2 === 0; // alternate left / right
-  const waUrl       = getWhatsAppLink(`Hi, I'm interested in ${product.name} — Rs. ${product.price.toLocaleString("en-IN")}. Is this available?`);
+  const currentPrice = product.salePrice ?? product.price;
+  const waUrl       = getWhatsAppLink(`Hi, I'm interested in ${product.name} — Rs. ${currentPrice.toLocaleString("en-IN")}. Is this available?`);
   const shownColors = product.colors.slice(0, 4);
   const extraColors = Math.max(0, product.colors.length - 4);
   const indexLabel  = `${String(index + 1).padStart(2, "0")} / ${String(total).padStart(2, "0")}`;
@@ -352,7 +353,7 @@ function ProductShowcaseItem({
             className="flex flex-wrap items-center gap-2.5 mb-6"
           >
             <span className="font-serif text-2xl text-gold mr-1.5">
-              {formatPrice(product.price)}
+              {formatPrice(currentPrice)}
             </span>
 
             {product.isNewArrival && (
@@ -420,7 +421,7 @@ function ProductShowcaseItem({
               </div>
             ) : (
               <a
-                href={getWhatsAppLink(`Hi, I'm interested in ${product.name} — Rs. ${product.price.toLocaleString("en-IN")}. Is this available?`)}
+                href={waUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={(e) => e.stopPropagation()}
