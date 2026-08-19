@@ -360,13 +360,6 @@ function ProductShowcaseItem({
               <Badge variant="gold">New Arrival</Badge>
             )}
 
-            {!product.isSoldOut && (
-              <Badge variant={product.stockType === "ready" ? "stock-ready" : "stock-mto"}>
-                {product.stockType === "ready"
-                  ? "Ready to Ship"
-                  : "Made to Order — 15 Days"}
-              </Badge>
-            )}
           </motion.div>
 
           {/* Colour swatches */}
@@ -445,13 +438,20 @@ function ProductShowcaseItem({
             )}
           </motion.div>
 
-          {/* Piece count note */}
-          <motion.p
+          {/* Accurate badges (Piece Count & Stock Type) replacing the fabricated text */}
+          <motion.div
             {...fadeUp(0.4)}
-            className="mt-4 font-sans text-xs text-text-muted"
+            className="mt-4 flex flex-wrap gap-2"
           >
-            {product.pieceCount}-Piece Unstitched Suit
-          </motion.p>
+            <Badge variant="stock-ready">{product.pieceCount}-Piece</Badge>
+            {!product.isSoldOut && (
+              <Badge variant={product.stockType === "ready" ? "stock-ready" : "stock-mto"}>
+                {product.stockType === "ready"
+                  ? "Ready to Ship"
+                  : "Made to Order — 15 Days"}
+              </Badge>
+            )}
+          </motion.div>
 
         </div>
       </div>
